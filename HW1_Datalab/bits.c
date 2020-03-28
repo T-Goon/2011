@@ -168,6 +168,8 @@ NOTES:
    - 285 hentaigana
    - 3 additional Zanabazar Square characters */
 /* We do not support C11 <threads.h>.  */
+
+#include <stdio.h>
 /*
  * oddBits - return word with all odd-numbered bits set to 1
  *   Legal ops: ! ~ & ^ | + << >>
@@ -175,13 +177,17 @@ NOTES:
  *   Rating: 2
  */
 int oddBits(void) {
-  int aa = 0xAA;
+  /*
+  Constructs a 8-bit int with the odd numbered bits set to 1.
+  Then uses logical left-shifts to put 4 of these ints next to each other,
+  constructing a full word with all odd bits set to 1.
+  */
+  int aa = 0b10101010;
   int odd = aa;
   odd = (odd << 8) + aa;
   odd = (odd << 8) + aa;
   odd = (odd << 8) + aa;
-  printf("%d", )
-  return od;
+  return odd;
 }
 /*
  * isTmin - returns 1 if x is the minimum, two's complement number,

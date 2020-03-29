@@ -169,7 +169,6 @@ NOTES:
    - 3 additional Zanabazar Square characters */
 /* We do not support C11 <threads.h>.  */
 
-#include <stdio.h>
 /*
  * oddBits - return word with all odd-numbered bits set to 1
  *   Legal ops: ! ~ & ^ | + << >>
@@ -182,12 +181,12 @@ int oddBits(void) {
   Then uses logical left-shifts to put 4 of these ints next to each other,
   constructing a full word with all odd bits set to 1.
   */
-  int aa = 0b10101010;
-  int odd = aa;
-  odd = (odd << 8) + aa;
-  odd = (odd << 8) + aa;
-  odd = (odd << 8) + aa;
-  return odd;
+  int aa = 0xaa;
+  int answer = aa;
+  answer = (answer << 8) + aa;
+  answer = (answer << 8) + aa;
+  answer = (answer << 8) + aa;
+  return answer;
 }
 /*
  * isTmin - returns 1 if x is the minimum, two's complement number,
@@ -197,7 +196,12 @@ int oddBits(void) {
  *   Rating: 1
  */
 int isTmin(int x) {
-  return 2;
+  /*
+  Tmin is the only number, when added to itself, will overflow to 0.
+  Using '!', 1 will be returned.
+  "^ !x" is added for the x=0 case. Without is x=0 would return 1.
+  */
+  return (!(x+x) ^ !(x));
 }
 /*
  * bitXor - x^y using only ~ and &
@@ -207,7 +211,14 @@ int isTmin(int x) {
  *   Rating: 1
  */
 int bitXor(int x, int y) {
-  return 2;
+  /*
+  'a' - the bits only in x
+  'b' - the bits only in y
+  ~(~a & ~b) - used to combine bits in 'a' and 'b'
+  */
+  int a = (x & ~y);
+  int b = (y & ~x);
+  return  ~(~a & ~b);
 }
 /*
  * conditional - same as x ? y : z

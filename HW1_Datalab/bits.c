@@ -199,7 +199,7 @@ int isTmin(int x) {
   /*
   Tmin is the only number, when added to itself, will overflow to 0.
   Using '!', 1 will be returned.
-  "^ !x" is added for the x=0 case. Without is x=0 would return 1.
+  "^ !x" is added for the x=0 case. Without it x=0 would return 1.
   */
   return (!(x+x) ^ !(x));
 }
@@ -228,7 +228,23 @@ int bitXor(int x, int y) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-  return 2;
+  // Figures out if x is true or false.
+  // if x is true the first will be true and second will be false
+  // if x is false then second will be true and first will be false
+  int first = !!x;
+  int second = !x;
+
+  // will fill the entire int with ones if the first bit is a one
+  // will will the entire int with zeros of the first bit is a zero
+  first = ~first + 1;
+  second = ~second + 1;
+
+  // uses first and second to set either y or z to 0 depending on if x is true or false
+  y = y & first;
+  z = z & second;
+
+  // when added answer will be either y or z, since one of them has been set to 0
+  return y + z;
 }
 /*
  * greatestBitPos - return a mask that marks the position of the
@@ -239,6 +255,8 @@ int conditional(int x, int y, int z) {
  *   Rating: 4
  */
 int greatestBitPos(int x) {
+  
+
   return 2;
 }
 /*

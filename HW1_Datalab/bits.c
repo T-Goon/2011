@@ -255,9 +255,45 @@ int conditional(int x, int y, int z) {
  *   Rating: 4
  */
 int greatestBitPos(int x) {
-  
+  // Fills in all bits right of the most significant bit with ones.
+  x = x | (x >> 1);
+  x = x | (x >> 2);
+  x = x | (x >> 4);
+  x = x | (x >> 8);
+  x = x | (x >> 16);
 
-  return 2;
+  // Check if the sign bit is 1 or not.
+  int isNeg = 1 << 31;
+  isNeg = isNeg & x;
+
+  // If the sign bit is 1, overflow it and set it to 0.
+  x = x + isNeg;
+
+  // If the sign bit is overflowed and set to 0,
+  // we don't want to do the upcoming right shift. (shift by 0)
+  int doShift = !isNeg;
+
+  // Use ! on x to check if x is zero or not
+  int isZero = 1;
+  isZero = isZero & !(x);
+
+  /*
+  If the sign bit was not detected as 1, shift x over by one bit
+  then add 1 to the number. The result being the most significant bit of the
+  input.
+
+  If the sign bit was detected, don't shift and add 1 to the number.
+  The result being the sign bit set to 1 and the rest of the bits 0.
+  */
+  int mask = (x >> doShift) + 1;
+
+  /*
+  If x is zero then the above code makes mask = 1 and isZero = 1.
+  Shift mask one to the right if it is 0 to make mask 0.
+  */
+  mask = mask >> isZero;
+
+  return mask;
 }
 /*
  * divpwr2 - Compute x/(2^n), for 0 <= n <= 30

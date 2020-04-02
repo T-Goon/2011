@@ -377,7 +377,37 @@ int isNonNegative(int x) {
  *   Rating: 3
  */
 int satMul2(int x) {
-  return 2;
+  /*
+  Uses the properties of arithmetic right shifting to detect if there is an
+  overflow when adding and saturates the answer if neccessary.
+  */
+  int Tmin, isTmin, answer, isDif, shift;
+  // Uses Tmin to detect if x is Tmin.
+  Tmin = 1 << 31;
+  isTmin = !(Tmin + x);
+  // isTmin = Tmin if x = Tmin, otherwise isTmin = 0.
+  isTmin = isTmin << 31;
+
+  // Use addition to multiply x by 2
+  answer = x + x;
+
+  // is all 1s if the signs of x and answer(x+x) are different
+  // detects overflow when adding
+  isDif = (x >> 31) ^ (answer >> 31);
+
+  // shift is 31 only if an overflow is detected, otherwise 0
+  shift = isDif & ~(Tmin >> 26);
+
+  // right shift answer by 31 only if there is overflow
+  // saturate answer if there is overflow and make it all 1s
+  answer = answer >> shift;
+
+  // Add Tmin to answer only if there is overflow
+  // Changes answer from 0xFFFFFFFF to 0x7FFFFFFF
+  Tmin = Tmin & isDif;
+  answer = answer + Tmin;
+
+  return answer;
 }
 /*
  * isLess - if x < y  then return 1, else return 0

@@ -255,6 +255,7 @@ int conditional(int x, int y, int z) {
  *   Rating: 4
  */
 int greatestBitPos(int x) {
+  int isNeg, doShift, isZero, mask;
   // Fills in all bits right of the most significant bit with ones.
   x = x | (x >> 1);
   x = x | (x >> 2);
@@ -263,7 +264,7 @@ int greatestBitPos(int x) {
   x = x | (x >> 16);
 
   // Check if the sign bit is 1 or not.
-  int isNeg = 1 << 31;
+  isNeg = 1 << 31;
   isNeg = isNeg & x;
 
   // If the sign bit is 1, overflow it and set it to 0.
@@ -271,10 +272,10 @@ int greatestBitPos(int x) {
 
   // If the sign bit is overflowed and set to 0,
   // we don't want to do the upcoming right shift. (shift by 0)
-  int doShift = !isNeg;
+  doShift = !isNeg;
 
   // Use ! on x to check if x is zero or not
-  int isZero = 1;
+  isZero = 1;
   isZero = isZero & !(x);
 
   /*
@@ -285,7 +286,7 @@ int greatestBitPos(int x) {
   If the sign bit was detected, don't shift and add 1 to the number.
   The result being the sign bit set to 1 and the rest of the bits 0.
   */
-  int mask = (x >> doShift) + 1;
+  mask = (x >> doShift) + 1;
 
   /*
   If x is zero then the above code makes mask = 1 and isZero = 1.
@@ -304,7 +305,44 @@ int greatestBitPos(int x) {
  *   Rating: 2
  */
 int divpwr2(int x, int n) {
-    return 2;
+  /*
+  Use the fact the a right shift of x by in will result in x/(2^n).
+  To avoid the rounding problem with negative numbers, x is change back to a
+  positive one before calculating the answer.
+  */
+  int isNeg, doAdd;
+
+  /*
+  Use isNeg and doAdd to change x back to a positive number if it was passed in
+  as negative.
+  */
+  // Check if x is negative or not
+  isNeg = 1 << 31;
+  // isNeg will stay the same if x is negative and become 0 if x is not negative.
+  isNeg = isNeg & x;
+  // Will make isNeg either all 1s or all 0s.
+  isNeg = isNeg >> 31;
+
+  /*
+  Will be
+  If x is Tmin doAdd will be 0.
+  In any other case doAdd will be 1 if isNeg is all 1s and 0 if isNeg is all 0s.
+  */
+  doAdd = (!!(x + x)) & isNeg;
+
+  /*
+  Make x a positive number.
+  Will only flip the bits if isNeg is all 1s.
+  Will only add by 1 if isNeg is all 1s and x is not Tmin.
+  */
+  x = (x ^ isNeg) + doAdd;
+
+  // Do the division with a right shift.
+  x = x >> n;
+
+  // If x was originally negative change it back to a negative number.
+  x = (x ^ isNeg) + doAdd;
+  return x;
 }
 /*
  * isNonNegative - return 1 if x >= 0, return 0 otherwise
@@ -314,7 +352,20 @@ int divpwr2(int x, int n) {
  *   Rating: 3
  */
 int isNonNegative(int x) {
-  return 2;
+  /*
+  Tmin & x, x being any number, will give Tmin if
+  x is negative and 0 if x if positive.
+  Using ! on that result will give 0 when the result is Tmin and 1 if
+  the result is 0.
+  */
+  int isNeg, answer;
+
+  isNeg = 1 << 31;
+  isNeg = isNeg & x;
+
+  answer = !(isNeg);
+
+  return answer;
 }
 /*
  * satMul2 - multiplies by 2, saturating to Tmin or Tmax if overflow

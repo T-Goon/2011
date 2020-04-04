@@ -466,7 +466,26 @@ int isLess(int x, int y) {
  *   Rating: 3
  */
 int isAsciiDigit(int x) {
-  return 2;
+  int lessThanOrEqual39, greaterThanOrEqual30, Tmin, answer;
+  /*
+  Use the fact that x-y will be negative if y > x to tell if x was inbetween
+  0x30 and 0x39.
+  */
+  Tmin = 1 << 31;
+
+  // Check if x is less than 0x3a
+  // Same as less than or equal to 0x39
+  lessThanOrEqual39 = x + (~0x3a + 1);
+  lessThanOrEqual39 = (lessThanOrEqual39 & Tmin);// Tmin if neg/ less Than 0x39
+
+  // Check if x is greater than 0x2F.
+  // Same as less than or equal to 0x30
+  greaterThanOrEqual30 = (0x2F) + (~x + 1);
+  greaterThanOrEqual30 = (greaterThanOrEqual30 & Tmin);// Tmin if neg/ greater than 0x30
+
+  // Check if both conditions are true.
+  answer = !!(lessThanOrEqual39 & greaterThanOrEqual30);
+  return answer;
 }
 /*
  * trueThreeFourths - multiplies by 3/4 rounding toward 0,

@@ -417,7 +417,44 @@ int satMul2(int x) {
  *   Rating: 3
  */
 int isLess(int x, int y) {
-  return 2;
+  int Tmin, negY, diff, isDiffNeg, doAdd,
+  sign1, sign2, diffSign, overflow, signSame,
+  xySame;
+  /*
+  Uses the fact that x - y will always be negative or 0 if x is less than y to find
+  out if x is less than y.
+  */
+  Tmin = (1 << 31);
+
+  // Change y to -y
+  doAdd = !!(Tmin + y);
+  negY = (~y) + doAdd;
+
+  // Calculate x - y
+  diff = x + negY;
+
+  /*
+  Checks if x - y overflowed.
+  To get an overflow x and y need to have the same sign and the sign
+  of the difference must be different than the sign of x and y.
+  */
+  sign1 = Tmin & negY;
+  sign2 = Tmin & x;
+  signSame = ~(sign1 ^ sign2);
+  diffSign = Tmin & diff;
+  overflow = signSame & (sign1 ^ diffSign);
+
+  // If x and y are the same number x cannot be less than y.
+  xySame = !!(x ^ y);
+  /*
+  Is true if:
+    -> x-y is negative and there is no overflow OR
+      x-y is positive and there is overflow
+    -> x != y
+  */
+  isDiffNeg = xySame & (!!((Tmin & diff) ^ overflow));
+
+  return isDiffNeg;
 }
 /*
  * isAsciiDigit - return 1 if 0x30 <= x <= 0x39 (ASCII codes for characters '0' to '9')

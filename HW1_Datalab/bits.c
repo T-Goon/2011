@@ -499,7 +499,29 @@ int isAsciiDigit(int x) {
  */
 int trueThreeFourths(int x)
 {
-  return 2;
+  /*
+  Calculate  x*(3/4) by doing x - (x/4).
+  */
+  int isNeg, doAdd, quarter, mod4, answer;
+
+  /*
+  If x is not a multiple of 4 and not negative, add one to the result of x/4.
+  Fixes a rounding problem with the division.
+  */
+  mod4 = !!(x & 3);
+  isNeg = 1 << 31;
+  isNeg = isNeg & x;
+
+  doAdd = mod4 & !isNeg;
+
+  // Do x/4 and add 1 to it if needed.
+  quarter = x >> 2;
+  quarter = quarter + doAdd;
+
+  // Do x - (x/4)
+  answer = x + (~quarter + 1);
+
+  return answer;
 }
 /*
  * ilog2 - return floor(log base 2 of x), where x > 0

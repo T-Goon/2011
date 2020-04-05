@@ -531,7 +531,72 @@ int trueThreeFourths(int x)
  *   Rating: 4
  */
 int ilog2(int x) {
-  return 2;
+  /*
+  floor(log base 2 of x) is the position of the MSB.
+  Use the properties of binary addition to get a mask with only the MSB.
+  Then use the properties of subtraction (add by a negative) to figure out how
+  far away the MSB is from the right.
+  */
+  int Tmin, count, furtherThanHalf, shift;
+  Tmin = 1 << 31;
+  count = 0;
+
+  // Make all bits to the right of the most sig. bit 1
+  x = x | (x >> 1);
+  x = x | (x >> 2);
+  x = x | (x >> 4);
+  x = x | (x >> 8);
+  x = x | (x >> 16);
+
+  // Shift one to the right and add one, leaving only the most sig. bit
+  x = (x >> 1) + 1;
+
+  /*
+  Use subtraction (adding a negative number) to check if x is further than 16
+  bits away from the right.
+  If x is futher away than 16 bits then furtherThanHalf wll be negative.
+  */
+  furtherThanHalf = (1 << 15) + (~x + 1);
+  furtherThanHalf = Tmin & furtherThanHalf; // Will be Tmin is furtherThanHalf is negative
+  shift = ((furtherThanHalf >> 31) & 16); // Will be 16 if furtherThanHalf is Tmin
+
+  // Shift x over 16 bits and add those bits to count.
+  x = x >> shift;
+  count = count + shift;
+
+  // Repeat for 8 bits away.
+  furtherThanHalf = (1 << 7) + (~x + 1);
+  furtherThanHalf = Tmin & furtherThanHalf;
+  shift = ((furtherThanHalf >> 31) & 8);
+
+  x = x >> shift;
+  count = count + shift;
+
+  // Repeat for 4 bits away.
+  furtherThanHalf = (1 << 3) + (~x + 1);
+  furtherThanHalf = Tmin & furtherThanHalf;
+  shift = ((furtherThanHalf >> 31) & 4);
+
+  x = x >> shift;
+  count = count + shift;
+
+  // Repeat for 2 bits away.
+  furtherThanHalf = (1 << 1) + (~x + 1);
+  furtherThanHalf = Tmin & furtherThanHalf;
+  shift = ((furtherThanHalf >> 31) & 2);
+
+  x = x >> shift;
+  count = count + shift;
+
+  // Repeat for 1 bit away.
+  furtherThanHalf = (1 << 0) + (~x + 1);
+  furtherThanHalf = Tmin & furtherThanHalf;
+  shift = ((furtherThanHalf >> 31) & 1);
+
+  x = x >> shift;
+  count = count + shift;
+
+  return count;
 }
 /*
  * float_neg - Return bit-level equivalent of expression -f for

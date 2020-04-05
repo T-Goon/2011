@@ -610,7 +610,27 @@ int ilog2(int x) {
  *   Rating: 2
  */
 unsigned float_neg(unsigned uf) {
- return 2;
+  /*
+  Use bit manipulations to check if the input is NAN. If so, return the input
+  unchanged. If not, return the input with the sign bit flipped.
+  */
+  int Tmin, Tmax, NANCheck, NAN;
+  NAN = 0x7FC00000;
+  Tmin = 0x80000000;
+  Tmax = ~Tmin;
+
+  // Get rid of the sign bit if it is there.
+  NANCheck = uf & Tmax;
+
+  // If the input is NAN or greater return the input
+  if(NANCheck >= NAN){
+    return uf;
+  }
+
+  // Flip the sign bit if the input is not NAN
+  uf = uf ^ Tmin;
+
+ return uf;
 }
 /*
  * float_i2f - Return bit-level equivalent of expression (float) x
@@ -622,6 +642,15 @@ unsigned float_neg(unsigned uf) {
  *   Rating: 4
  */
 unsigned float_i2f(int x) {
+  int exp, temp;
+  exp = 0;
+  temp = x;
+  while(temp =>> 1){
+    exp += 1;
+  }
+
+
+
   return 2;
 }
 /*

@@ -725,6 +725,10 @@ unsigned float_i2f(int x) {
  *   Rating: 4
  */
 unsigned float_twice(unsigned uf) {
+  /*
+  Deconstructs the float to perform multiplication and then
+  reconstructing the answer.
+  */
   unsigned signBit, mantissa, exponent, answer;
 
   // Extract sign bit from uf
@@ -744,6 +748,7 @@ unsigned float_twice(unsigned uf) {
   // Multiply by 2
   mantissa = mantissa << 1;
 
+  // Special case for 0
   if(exponent != 0){
     mantissa = mantissa >> 1;
     exponent += 1;
@@ -755,9 +760,11 @@ unsigned float_twice(unsigned uf) {
     mantissa = 0;
   }
 
+  // Put the exonent back into the correct position
   exponent = exponent << 23;
 
   // Constuct the new float after multiplication
   answer = signBit | exponent | mantissa;
+
   return answer;
 }

@@ -642,16 +642,76 @@ unsigned float_neg(unsigned uf) {
  *   Rating: 4
  */
 unsigned float_i2f(int x) {
-  int exp, temp;
+  /*
+  Convert and int to a float following the IEEE specifications.
+  */
+  int exp, fracShift;
+  unsigned temp, signBit, xAsFloat, frac, discard,
+  g, r, s;
+  g = 0;
+  r = 0;
+  s = 0;
   exp = 0;
-  temp = x;
-  while(temp =>> 1){
+
+  // If x is negative change it to positive so exp and frac can be found.
+  if(x < 0){
+    temp = -x;
+    frac = temp;
+  }
+  else{
+    temp = x;
+    frac = x;
+  }
+
+  // Find the position of the highest order bit.
+  while(temp >>= 1){
     exp += 1;
   }
 
+  // Determine in which direction and how much to shift to get frac
+  // in the correct position.
+  fracShift = exp - 23;
 
+  // If frac is larger than 23 bits then find the guard, round, and sticky
+  // bits for rounding.
+  if(fracShift > 0){
+    if(fracShift > 1){
+      s = frac << (33-fracShift);
+    }
+    r = (1 << (fracShift-1)) & frac;
+    g = (1 << fracShift) & frac;
+  }
 
-  return 2;
+  // Get frac into the correct position for IEEE format.
+  // Get rid of the leading implied 1 bit.
+  discard = (1 << exp);
+  frac = ((frac | discard) ^ discard);
+  if(fracShift < 0){
+     // pad frac with 0s until it is 23 bits.
+     frac = frac << -fracShift;
+   }
+   else{
+     // Truncate to 23 bits.
+     frac = frac >> fracShift;
+   }
+
+  // Add the bias to exp
+  if(x != 0){
+    exp = exp + 127;
+  }
+
+  // Extract the sign bit from x.
+  signBit = 0x80000000 & x;
+
+  // Construct the float.
+  xAsFloat = signBit | (exp << 23) | frac;
+
+  // Round the float.
+  if((s || g) && r){
+    xAsFloat += 1;
+  }
+
+  return xAsFloat;
 }
 /*
  * float_twice - Return bit-level equivalent of expression 2*f for

@@ -687,12 +687,12 @@ unsigned float_i2f(int x) {
   discard = (1 << exp);
   frac = ((frac | discard) ^ discard);
   if(fracShift < 0){
-     // pad frac with 0s until it is 23 bits.
-     frac = frac << -fracShift;
+    // pad frac with 0s until it is 23 bits.
+    frac = frac << -fracShift;
    }
    else{
-     // Truncate to 23 bits.
-     frac = frac >> fracShift;
+    // Truncate to 23 bits.
+    frac = frac >> fracShift;
    }
 
   // Add the bias to exp
@@ -725,5 +725,39 @@ unsigned float_i2f(int x) {
  *   Rating: 4
  */
 unsigned float_twice(unsigned uf) {
-  return 2;
+  unsigned signBit, mantissa, exponent, answer;
+
+  // Extract sign bit from uf
+  signBit = uf & 0x80000000;
+
+  // Extract the exponent from uf
+  exponent = (uf >> 23) & 0x000000FF;
+
+  // Extract mantissa from uf
+  mantissa = 0x007FFFFF & uf;
+
+  // Return input if input is NAN
+  if(exponent >= 0xFF && mantissa > 0){
+    return uf;
+  }
+
+  // Multiply by 2
+  mantissa = mantissa << 1;
+
+  if(exponent != 0){
+    mantissa = mantissa >> 1;
+    exponent += 1;
+  }
+
+  // The exponent has overflowed to +/- inf.
+  if(exponent >= 0xFF){
+    exponent = 0xFF;
+    mantissa = 0;
+  }
+
+  exponent = exponent << 23;
+
+  // Constuct the new float after multiplication
+  answer = signBit | exponent | mantissa;
+  return answer;
 }

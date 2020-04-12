@@ -1,0 +1,68 @@
+0000000000001394 <phase_2>:
+    1394:	55                   	push   %rbp// save values for main
+    1395:	53                   	push   %rbx
+
+    1396:	48 83 ec 28          	sub    $0x28,%rsp
+    139a:	64 48 8b 04 25 28 00 	mov    %fs:0x28,%rax
+    13a1:	00 00 
+    13a3:	48 89 44 24 18       	mov    %rax,0x18(%rsp)
+    13a8:	31 c0                	xor    %eax,%eax
+    13aa:	48 89 e6             	mov    %rsp,%rsi
+    13ad:	e8 d7 07 00 00       	callq  1b89 <read_six_numbers>
+    13b2:	83 3c 24 00          	cmpl   $0x0,(%rsp) // value at stack pointer - 0
+    13b6:	78 0a                	js     13c2 <phase_2+0x2e> // if value is neg explode
+    13b8:	bb 01 00 00 00       	mov    $0x1,%ebx //set ebx to 1
+    13bd:	48 89 e5             	mov    %rsp,%rbp // copy stack pointer to rbp
+
+    13c0:	eb 11                	jmp    13d3 <phase_2+0x3f> // enter the loop
+    13c2:	e8 86 07 00 00       	callq  1b4d <explode_bomb>
+    13c7:	eb ef                	jmp    13b8 <phase_2+0x24>
+					// loop
+    13c9:	48 83 c3 01          	add    $0x1,%rbx // add 1 to rbx
+    13cd:	48 83 fb 06          	cmp    $0x6,%rbx // rbx - 6
+    13d1:	74 13                	je     13e6 <phase_2+0x52> // if 6 jump out of loop
+    13d3:	89 d8                	mov    %ebx,%eax // set eax to 1
+    13d5:	03 44 9d fc          	add    -0x4(%rbp,%rbx,4),%eax //stack pointer + rbx*4 - 4 to eax
+    13d9:	39 44 9d 00          	cmp    %eax,0x0(%rbp,%rbx,4) // stack pointer + rbx*4 - 1
+    13dd:	74 ea                	je     13c9 <phase_2+0x35> // go to top of loop
+
+    13df:	e8 69 07 00 00       	callq  1b4d <explode_bomb>
+    13e4:	eb e3                	jmp    13c9 <phase_2+0x35>
+
+    13e6:	48 8b 44 24 18       	mov    0x18(%rsp),%rax // 6 + 18
+
+	// ignore this part
+    13eb:	64 48 33 04 25 28 00 	xor    %fs:0x28,%rax
+    13f2:	00 00 
+    13f4:	75 07                	jne    13fd <phase_2+0x69>
+
+
+    13f6:	48 83 c4 28          	add    $0x28,%rsp // stack pointer up 10 bytes
+
+    13fa:	5b                   	pop    %rbx // restore values for main
+    13fb:	5d                   	pop    %rbp
+    13fc:	c3                   	retq   
+    13fd:	e8 ae fb ff ff       	callq  fb0 <__stack_chk_fail@plt>
+
+0000000000001b89 <read_six_numbers>:
+    1b89:	48 83 ec 08          	sub    $0x8,%rsp //make room on the stack
+    1b8d:	48 89 f2             	mov    %rsi,%rdx // move the second arg to rdx
+    1b90:	48 8d 4e 04          	lea    0x4(%rsi),%rcx // second arg + 4 to rcx
+    1b94:	48 8d 46 14          	lea    0x14(%rsi),%rax // second arg + 20 to rax
+    1b98:	50                   	push   %rax // push rax onto the stack
+    1b99:	48 8d 46 10          	lea    0x10(%rsi),%rax // second arg + 16 bits to rax
+    1b9d:	50                   	push   %rax // push rax to stack
+    1b9e:	4c 8d 4e 0c          	lea    0xc(%rsi),%r9 // second arg + 12 to r9
+    1ba2:	4c 8d 46 08          	lea    0x8(%rsi),%r8 // second arg + 8 to 8
+    1ba6:	48 8d 35 f4 12 00 00 	lea    0x12f4(%rip),%rsi        # 2ea1 <array.3415+0x281>
+    1bad:	b8 00 00 00 00       	mov    $0x0,%eax // set bottom half of rax to 0
+    1bb2:	e8 99 f4 ff ff       	callq  1050 <__isoc99_sscanf@plt> // scanf
+    1bb7:	48 83 c4 10          	add    $0x10,%rsp // move stack pointer up 16 bits
+    1bbb:	83 f8 05             	cmp    $0x5,%eax // 0 - 5
+    1bbe:	7e 05                	jle    1bc5 <read_six_numbers+0x3c> // less than or equal to 6
+										must put in 6 nums
+    1bc0:	48 83 c4 08          	add    $0x8,%rsp // make room on stack
+    1bc4:	c3                   	retq   // return 8 bytes
+    1bc5:	e8 83 ff ff ff       	callq  1b4d <explode_bomb>
+
+

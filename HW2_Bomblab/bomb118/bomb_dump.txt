@@ -531,7 +531,7 @@ Disassembly of section .text:
     1602:	00 00 
     1604:	48 89 44 24 58       	mov    %rax,0x58(%rsp)
     1609:	31 c0                	xor    %eax,%eax
-    160b:	49 89 e4             	mov    %rsp,%r12
+    160b:	49 89 e4             	mov    %rsp,%r12 // move stack pointer to r12
     160e:	4c 89 e6             	mov    %r12,%rsi
     1611:	e8 73 05 00 00       	callq  1b89 <read_six_numbers>
     1616:	41 bd 00 00 00 00    	mov    $0x0,%r13d
@@ -548,32 +548,37 @@ Disassembly of section .text:
     1638:	e8 10 05 00 00       	callq  1b4d <explode_bomb>
     163d:	eb e6                	jmp    1625 <phase_6+0x34>
     163f:	49 83 c4 04          	add    $0x4,%r12
-    1643:	4c 89 e5             	mov    %r12,%rbp
-    1646:	41 8b 04 24          	mov    (%r12),%eax
-    164a:	83 e8 01             	sub    $0x1,%eax
+    1643:	4c 89 e5             	mov    %r12,%rbp // move stack pointer to rbp
+    1646:	41 8b 04 24          	mov    (%r12),%eax // first number to eax
+    164a:	83 e8 01             	sub    $0x1,%eax // sub 1 from first number
     164d:	83 f8 05             	cmp    $0x5,%eax
-    1650:	77 cc                	ja     161e <phase_6+0x2d>
-    1652:	41 83 c5 01          	add    $0x1,%r13d
-    1656:	41 83 fd 06          	cmp    $0x6,%r13d
-    165a:	74 35                	je     1691 <phase_6+0xa0>
+    1650:	77 cc                	ja     161e <phase_6+0x2d> // first -1 above 5 explode
+    1652:	41 83 c5 01          	add    $0x1,%r13d // 0 + 1
+    1656:	41 83 fd 06          	cmp    $0x6,%r13d 
+    165a:	74 35                	je     1691 <phase_6+0xa0> // if 6 jump down
     165c:	44 89 eb             	mov    %r13d,%ebx
     165f:	eb cc                	jmp    162d <phase_6+0x3c>
+
     1661:	48 8b 52 08          	mov    0x8(%rdx),%rdx
     1665:	83 c0 01             	add    $0x1,%eax
     1668:	39 c8                	cmp    %ecx,%eax
     166a:	75 f5                	jne    1661 <phase_6+0x70>
+
     166c:	48 89 54 f4 20       	mov    %rdx,0x20(%rsp,%rsi,8)
     1671:	48 83 c6 01          	add    $0x1,%rsi
     1675:	48 83 fe 06          	cmp    $0x6,%rsi
     1679:	74 1d                	je     1698 <phase_6+0xa7>
-    167b:	8b 0c b4             	mov    (%rsp,%rsi,4),%ecx
+
+    167b:	8b 0c b4             	mov    (%rsp,%rsi,4),%ecx // first num to ecx
     167e:	b8 01 00 00 00       	mov    $0x1,%eax
     1683:	48 8d 15 96 2b 20 00 	lea    0x202b96(%rip),%rdx        # 204220 <node1>
     168a:	83 f9 01             	cmp    $0x1,%ecx
     168d:	7f d2                	jg     1661 <phase_6+0x70>
     168f:	eb db                	jmp    166c <phase_6+0x7b>
-    1691:	be 00 00 00 00       	mov    $0x0,%esi
+
+    1691:	be 00 00 00 00       	mov    $0x0,%esi // esi to 0
     1696:	eb e3                	jmp    167b <phase_6+0x8a>
+
     1698:	48 8b 5c 24 20       	mov    0x20(%rsp),%rbx
     169d:	48 8b 44 24 28       	mov    0x28(%rsp),%rax
     16a2:	48 89 43 08          	mov    %rax,0x8(%rbx)

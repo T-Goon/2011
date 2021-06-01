@@ -8,21 +8,15 @@ Solves a variety of problems only using bitwise operations.
 
 ![image](https://user-images.githubusercontent.com/32044950/120390454-b7bb0900-c2fb-11eb-9e30-26727c87cd1a.png)
 
-Answers found in bits.c. A detailed description of the assignment is found below and in datalab.pdf.
+Answers found in bits.c. A detailed description of the assignment is found below and in "datalab.pdf".
 
 ***********************
-The CS:APP Data Lab
-Directions to Students
-***********************
+## The CS:APP Data Lab Directions to Students
 
 Your goal is to modify your copy of bits.c so that it passes all the
 tests in btest without violating any of the coding guidelines.
 
-
-*********
-0. Files:
-*********
-
+### 0. Files:
 Makefile	- Makes btest, fshow, and ishow
 README		- This file
 bits.c		- The file you will be modifying and handing in
@@ -38,9 +32,7 @@ Driverhdrs.pm   - Header file for optional "Beat the Prof" contest
 fshow.c		- Utility for examining floating-point representations
 ishow.c		- Utility for examining integer representations
 
-***********************************************************
-1. Modifying bits.c and checking it for compliance with dlc
-***********************************************************
+### 1. Modifying bits.c and checking it for compliance with dlc
 
 IMPORTANT: Carefully read the instructions in the bits.c file before
 you start. These give the coding rules that you will need to follow if
@@ -62,9 +54,7 @@ causes dlc to print counts of the number of operators used by each function.
 Once you have a legal solution, you can test it for correctness using
 the ./btest program.
 
-*********************
-2. Testing with btest
-*********************
+### 2. Testing with btest
 
 The Makefile in this directory compiles your version of bits.c with
 additional code to create a program (or test harness) named btest.
@@ -120,9 +110,7 @@ Examples:
 Btest does not check your code for compliance with the coding
 guidelines.  Use dlc to do that.
 
-*******************
-3. Helper Programs
-*******************
+### 3. Helper Programs
 
 We have included the ishow and fshow programs to help you decipher
 integer and floating point representations respectively. Each takes a

@@ -1,6 +1,22 @@
+# HW3 Attacklab
+
+The goal of this assignment is to use buffer overflow attacks to run code by code-injection and using return-oriented methods to execute bits of existing code. This was done
+by writting the hexcodes for different computer instructions and padding in the following files:
+
+- ctarget.l1
+- ctarget.l2
+- ctarget.l3
+- rtarget.l2
+- rtarget.l3
+
+For this assignment to work properly stack randomization was turned off. This is done with "no_randomize.sh" and "yes_randomize.sh".
+
+More details on the assignment can be found in "attacklab.pdf".
+
+*************
 This file contains materials for one instance of the attacklab.
 
-Files:
+## Files:
 
     ctarget
 
